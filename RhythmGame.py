@@ -36,7 +36,7 @@ def show_hp(bgImg, hp_img, x_offset, y_offset, x_resize, y_resize):
     dst = cv2.add(bgImg_bg, hp_fg)
     bgImg[y_offset: y_offset + rows, x_offset:x_offset + cols] = dst
 
-#
+# called every frame; checks if the player scored
 def match(config, match_list, centers, hp, play_time):
     BodyColors = [[255, 0, 0],
                   [0, 0, 0],
@@ -56,7 +56,7 @@ def match(config, match_list, centers, hp, play_time):
                   [0, 0, 0],
                   [0, 0, 0],
                   [0, 0, 0]]
-    for i in match_list:  # 예)i = [4.0, 3.5, 4.2, F, 0 or PATH, (2, 3), (5, 12)] # 여기 ~ 33 !!
+    for i in match_list:
         if not i[4] == 0:
             pass
         for j in range(18):
@@ -64,9 +64,9 @@ def match(config, match_list, centers, hp, play_time):
             color = [BodyColors[j][2],BodyColors[j][1],BodyColors[j][0]]
             config.named_window = cv2.circle(config.named_window,
                                              center, 10, color, thickness=-1)
-        for j in i[5:]:  # 5 인덱스부터 끝까지 예)j = (2, 3)
+        for j in i[5:]:
             if i[0] - 3 < play_time < i[0]:
-                circle_ratio = (play_time - (i[0] - 3)) / 3  # 3.7 ~ 최대 4.0초
+                circle_ratio = (play_time - (i[0] - 3)) / 3
                 box_x = int((config.activation_areas[j[0]][0][0] + config.activation_areas[j[0]][1][0]) / 2)
                 box_y = int((config.activation_areas[j[0]][0][1] + config.activation_areas[j[0]][1][1]) / 2)
 
@@ -79,8 +79,7 @@ def match(config, match_list, centers, hp, play_time):
                            (box_x, box_y),
                            60 - int(40 * circle_ratio), color, thickness=2)
 
-            if int(config.activation_areas[j[0]][0][0]) < centers[j[1]][0] < int(config.activation_areas[j[0]][1][0]) and int(config.activation_areas[j[0]][0][1]) < centers[j[1]][1] < int(config.activation_areas[j[0]][1][1]): # ?? 범
-                  # and i[4] == False: 지움 !!
+            if int(config.activation_areas[j[0]][0][0]) < centers[j[1]][0] < int(config.activation_areas[j[0]][1][0]) and int(config.activation_areas[j[0]][0][1]) < centers[j[1]][1] < int(config.activation_areas[j[0]][1][1]):
                 global score
                 score += 5
                 if hp < 10:
@@ -96,16 +95,10 @@ def start_game(config, params):
     cam = cv2.VideoCapture(0)
     ret, named_window = cam.read()
 
-
-    # 실루엣 맞추기: 카메라 키고, (사진 띄우고, point 4개 범위 안에 들어오면) X 3번 loop 나가
-    # sil = ["1.png", "2.png", "3.png"] # 이런 식
-
-    # 게임 시작: clear_menu, pause_menu, death_menu 중에 하나로 끝남
-    pause_img = cv2.imread('images/pause.png')
     score_img = cv2.imread('images/score.png')
     gameover_img = cv2.imread('images/gameover.png')
 
-    # 목숨 관련 변수들
+    # hp(health point) attributes
     hp_x = config.imWidth//2 + 400
     hp_y = config.imHeight//2 - 345
     hp_yy = config.imHeight//2 - 300
@@ -118,48 +111,42 @@ def start_game(config, params):
     e = TfPoseEstimator(get_graph_path('mobilenet_thin'), target_size=(w, h), trt_bool=str2bool("False"))
 
     global score
-    while True:  # restart 하면 여기로 돌아오지 (실루엣 다시 안 해도 됨)
+    while True:
         params["restart"] = False
-        hp = 10 # death까지의 목숨(?) (10번 못 맞추면 death_menu)
+        hp = 10
         cur_order = 0
-        # params
-
         score = 0
 
-        game_patterns = [] # 재구성할 리스트
+        game_patterns = []
 
-        for i in params["patterns"]: # ex) i = [4.0, 0, 0, 3, 0, 0, 12, 0, 0, 0] 여기 ~ 89 !!
+        for i in params["patterns"]:
             list = []
             if i[10]:
                 time1 = i[0] - 6.6
                 time2 = i[0]
             else:
-                time1 = i[0] - 3 # 여기 ~ 81!!
+                time1 = i[0] - 3
                 time2 = i[0] + 1
             list.extend([i[0], time1, time2, False, i[10]])
-            # 구역 9개에 대해서 리스트에다가 (영역, 부위) 튜플을 원소로 append
+
             for j in range(1, 10): # j = 1 ~ 9
                 if i[j]:
                     list.append(tuple([j - 1, i[j] - 1]))
             game_patterns.append(list)
 
-        # params["patterns"][0] = [4,0, 0, 0, 3, 0, 0, 12, 0, 0, 0]
-        #   -> game_patterns[0] = [4.0, 3.5, 4.2, False, (2, 3), (5, 12)]
-        match_list = [] # 주어진 시간 안에 해당되는, match 해볼 규칙들
-
-        #a = input('Press...')
+        match_list = [] # sets to be checked for scoring; reset each frame
 
         start_time = time.time()
         resume_time = 0.0
         resume_start = 0.0
         play_music(params["song"], 0)
-        while True: # game play
 
+        while True: # game play
             ret, named_window = cam.read()
             config.named_window = cv2.resize(named_window, dsize=(1312, 736), interpolation=cv2.INTER_AREA)
             config.named_window = cv2.flip(config.named_window, 1)
             print(named_window.shape)
-            humans = e.inference(named_window, resize_to_default=(w > 0 and h > 0), upsample_size=4.0) # 4 / 1 ??
+            humans = e.inference(named_window, resize_to_default=(w > 0 and h > 0), upsample_size=4.0)
             if not humans:
                 continue
 
@@ -175,12 +162,9 @@ def start_game(config, params):
                     center = (image_w - int(body_part.x * image_w + 0.5), int(body_part.y * image_h + 0.5))
                     centers.append(center)
 
-
-            # 실루엣
-            play_time = time.time() - start_time  # 플레이 시간 측정
+            play_time = time.time() - start_time
             pattern = game_patterns[cur_order]
 
-            # 어떤 규칙이 time1을 지나면 & 아직 match_list에 없으면(= 첫번째 조건 만족해도 중복 append 방지 위해)
             if game_patterns[cur_order][1] < play_time and game_patterns[cur_order] not in match_list:
                 match_list.append(game_patterns[cur_order])
                 cur_order += 1
@@ -190,25 +174,19 @@ def start_game(config, params):
                 match_list = match(config, match_list, centers, hp, play_time)
             if match_list and match_list[0][2] < play_time: # and 아직 있으면
                 hp -= 1
-                del match_list[0] # 고침!! 항상 [0]일 테니끼 right?
-                # match_list.remove(game_patterns[cur_order]) 도 됨
+                del match_list[0]
 
             cv2.putText(config.named_window, 'score:', (int(config.imWidth / 2 - 600), int(config.imHeight / 2 - 300)), cv2.FONT_HERSHEY_PLAIN, 4,
                         (255, 255, 255), 7, cv2.LINE_8)
             cv2.putText(config.named_window, '%d' % score, (int(config.imWidth / 2 - 600), int(config.imHeight / 2 - 250)), cv2.FONT_HERSHEY_PLAIN, 4,
                         (255, 255, 255), 7, cv2.LINE_8)
 
-            if cur_order == len(game_patterns): # 이런 식
+            if cur_order == len(game_patterns):
                 config.named_window = score_img
                 clear_menu(params, score)
 
             if cv2.waitKey(1) & 0xFF == ord('p'):
                 params["exit"] = True
-                # mixer.music.stop()
-                # config._window = pause_img
-                # resume_start = time.time()
-                # # while 문 밖에서 선언해서 global 선언 해줘야됨
-                # resume_time = pause_menu(play_time, params, resume_start)
 
             if hp <= 0 or play_time > game_patterns[len(game_patterns) - 1][2] + 5:
                 mixer.music.stop()
@@ -228,17 +206,17 @@ def start_game(config, params):
                 if i >= 5:
                     show_hp(config.named_window, hp_image, hp_x + (i - 5) * hp_w, hp_yy, hp_w, hp_h)
 
-            cv2.imshow('McgBcg', config.named_window) #image_h, image_w
+            cv2.imshow('McgBcg', config.named_window)
 
         if params["exit"] == True:
             break
         if params["menu"] == True:
             break
 
-
-def clear_menu(params, score): # 게임 잘 끝냈을 때
-
+# Well Done!
+def clear_menu(params, score):
     play_sound(sound_applause)
+
     # show score
     cv2.putText(config.named_window, '%d' % score, (int(config.imWidth / 2 - 390), int(config.imHeight / 2 + 90)), cv2.FONT_HERSHEY_SCRIPT_COMPLEX, 7, (0,0,0), 15, cv2.LINE_8)
     cv2.putText(config.named_window, '%d'%score, (200, 480), cv2.FONT_HERSHEY_SCRIPT_COMPLEX, 7, (255,255,255), 15, cv2.LINE_8)
@@ -261,36 +239,9 @@ def clear_menu(params, score): # 게임 잘 끝냈을 때
             params["exit"] = True
             print("exit")
             break
-#
-# def pause_menu(play_time, params, resume_start):
-#
-#     cv2.imshow('Pause', config.named_window)
-#
-#     a = cv2.waitKey(0)
-#
-#     if a & 0xFF == ord('1'):# resume (이어서; 싱크 맞추기 어려운 작업)
-#         play_sound(sound_effect2)
-#         print('resume')
-#         play_music(params["song"], play_time - 5) # 5초 전부터 재생
-#         return time.time() - resume_start
-#
-#     if a & 0xFF == ord('2'): # restart
-#         play_sound(sound_effect2)
-#         print('restart')
-#         params["restart"] = True
-#
-#     if a & 0xFF == ord('3'): # menu
-#         play_sound(sound_effect2)
-#         print('menu')
-#         params["menu"] = True
-#
-#     if a & 0xFF == ord('4'): # exit
-#         play_sound(sound_effect2)
-#         print('exit')
-#         params["exit"] = True
 
-
-def death_menu(params): # 너무 못해서 알아서 게임이 멈춤
+# Game Over..
+def death_menu(params):
     play_sound(sound_disappointed)
     image = cv2.imread('images/gameover.png')
     while True:
