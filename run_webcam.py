@@ -8,7 +8,6 @@ from utils import *
 import cv2
 
 
-
 if __name__ == '__main__':
     # config 안에 박
     config = GameConfig()
