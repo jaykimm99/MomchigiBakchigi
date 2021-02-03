@@ -8,13 +8,9 @@ from utils import *
 import cv2
 
 
-
 if __name__ == '__main__':
-    # config 안에 박
     config = GameConfig()
     params = {'diff': None, 'patterns': None, 'song': None, 'exit': None, 'menu': None, 'restart': None}
-
-    # config.named_window = cv2.namedWindow('Momchigi')
 
     logger = logging.getLogger('TfPoseEstimator-WebCam')
     logger.setLevel(logging.DEBUG)
@@ -41,9 +37,10 @@ if __name__ == '__main__':
                         help='for tensorrt process.')
     args = parser.parse_args()
 
+    # load pattern and song, start game
     while True:
         main_menu(config, params)
-        if params["exit"] is True:  # main menu에서 종료 버튼
+        if params["exit"] is True:
             cv2.destroyAllWindows()
             break
         print('load_pattern')
