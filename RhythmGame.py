@@ -195,7 +195,7 @@ def start_game(config, params):
 
             if params["exit"] == True:
                 break
-            if params["restart"] == True: # 같은 게임 다시 시작
+            if params["restart"] == True:
                 break
             if params["menu"] == True:
                 break
