@@ -36,6 +36,7 @@ def show_hp(bgImg, hp_img, x_offset, y_offset, x_resize, y_resize):
     dst = cv2.add(bgImg_bg, hp_fg)
     bgImg[y_offset: y_offset + rows, x_offset:x_offset + cols] = dst
 
+#
 def match(config, match_list, centers, hp, play_time):
     BodyColors = [[255, 0, 0],
                   [0, 0, 0],
@@ -88,7 +89,7 @@ def match(config, match_list, centers, hp, play_time):
                     hp = 10
                     match_list.remove(i)
 
-    return match_list  # global화 시키기 위해서 return
+    return match_list
 
 
 def start_game(config, params):
@@ -182,12 +183,10 @@ def start_game(config, params):
             # 어떤 규칙이 time1을 지나면 & 아직 match_list에 없으면(= 첫번째 조건 만족해도 중복 append 방지 위해)
             if game_patterns[cur_order][1] < play_time and game_patterns[cur_order] not in match_list:
                 match_list.append(game_patterns[cur_order])
-                # cur_pattern = Pattern()
                 cur_order += 1
                 if cur_order > len(game_patterns) - 1:
                     cur_order = len(game_patterns) - 1
             if match_list:
-                # centers resize, flip
                 match_list = match(config, match_list, centers, hp, play_time)
             if match_list and match_list[0][2] < play_time: # and 아직 있으면
                 hp -= 1
