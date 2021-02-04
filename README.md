@@ -7,7 +7,7 @@
 
 Original Repo : https://github.com/ildoonet/tf-pose-estimation
 
-## Installation
+## Install
 
 See [install.md](./etc/experiments.md)
 
