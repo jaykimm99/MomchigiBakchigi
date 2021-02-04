@@ -1,7 +1,13 @@
 # MomchigiBakchigi
 
-(프로젝트 개요)
-'Openpose', human pose estimation algorithm, have been implemented using Tensorflow. It also provides several variants that have some changes to the network structure for **real-time processing on the CPU or low-power embedded devices.**
+Most of the motion-based games on the market require players to purchase extra devices such as motion controllers and sensors. However, they can actually enjoy motion games with just one webcam if motion sensor is replaced by pose estimation algorithm. We developed a webcam-based rhythm game in which players tag circles on the screen with their body parts.
+We used https://github.com/ildoonet/tf-pose-estimation as our base architecture.
+
+Demo
+사용자가 음악에 맞춰서 화면에 등장하는 원들을 hit하면 점수가 기록됩니다.
+화면에 나오는 body part의 색깔과 대응하는 원을 hit해야 점수가 기록되고 그 외의 경우에는 기록되지 않습니다
+게임이 끝나면 최종점수가 뜨고 목숨을 모두 소진하는 경우에는 Game over 됩니다.
+See [sample1.gif](./etcs/sample1.gif)
 
 **You can even run this on your macbook with a descent FPS!**
 
