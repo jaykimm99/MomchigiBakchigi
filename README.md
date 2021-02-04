@@ -11,14 +11,15 @@ Original Repo : https://github.com/ildoonet/tf-pose-estimation
 
 See [install.md](./etc/experiments.md)
 
-(표로 utils, run_webcam, RhythmGame 설명 + 엑셀 파일 설명)
 
-(끝)
-| CMU's Original Model</br> on Macbook Pro 15" | Mobilenet-thin </br>on Macbook Pro 15" | Mobilenet-thin</br>on Jetson TX2 |
-|:---------|:--------------------|:----------------|
-| ![cmu-model](/etcs/openpose_macbook_cmu.gif)     | ![mb-model-macbook](/etcs/openpose_macbook_mobilenet3.gif) | ![mb-model-tx2](/etcs/openpose_tx2_mobilenet3.gif) |
-| **~0.6 FPS** | **~4.2 FPS** @ 368x368 | **~10 FPS** @ 368x368 |
-| 2.8GHz Quad-core i7 | 2.8GHz Quad-core i7 | Jetson TX2 Embedded Board | 
+## [파일 설명]
+| File | Description |
+|:--   |:--   |
+|Rythmgame.py | Proceeds the game by capturing motion and scoring points. |
+|run_webcam.py | Main function that controls the overall game flow. |
+|utils.py | Functions for game settings. |
+|sunset_glow.xlsx | Excel file with game patterns we set. |
+
 
 Implemented features are listed here : [features](./etcs/feature.md)
 
