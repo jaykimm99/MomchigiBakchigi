@@ -1,19 +1,11 @@
-# MomchigiBakchigi
+# tf-pose-estimation
 
-(프로젝트 개요)
 'Openpose', human pose estimation algorithm, have been implemented using Tensorflow. It also provides several variants that have some changes to the network structure for **real-time processing on the CPU or low-power embedded devices.**
 
 **You can even run this on your macbook with a descent FPS!**
 
-Original Repo : https://github.com/ildoonet/tf-pose-estimation
+Original Repo(Caffe) : https://github.com/CMU-Perceptual-Computing-Lab/openpose
 
-## Install
-
-See [install.md](./etc/experiments.md)
-
-(표로 utils, run_webcam, RhythmGame 설명 + 엑셀 파일 설명)
-
-(끝)
 | CMU's Original Model</br> on Macbook Pro 15" | Mobilenet-thin </br>on Macbook Pro 15" | Mobilenet-thin</br>on Jetson TX2 |
 |:---------|:--------------------|:----------------|
 | ![cmu-model](/etcs/openpose_macbook_cmu.gif)     | ![mb-model-macbook](/etcs/openpose_macbook_mobilenet3.gif) | ![mb-model-tx2](/etcs/openpose_tx2_mobilenet3.gif) |
@@ -21,6 +13,12 @@ See [install.md](./etc/experiments.md)
 | 2.8GHz Quad-core i7 | 2.8GHz Quad-core i7 | Jetson TX2 Embedded Board | 
 
 Implemented features are listed here : [features](./etcs/feature.md)
+
+## Important Updates
+
+- 2019.3.12 Add new models using mobilenet-v2 architecture. See : [experiments.md](./etcs/experiments.md)
+- 2018.5.21 Post-processing part is implemented in c++. It is required compiling the part. See: https://github.com/ildoonet/tf-pose-estimation/tree/master/src/pafprocess
+- 2018.2.7 Arguments in run.py script changed. Support dynamic input size.
 
 ## Install
 
