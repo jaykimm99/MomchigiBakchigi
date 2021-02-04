@@ -1,8 +1,8 @@
 # MomchigiBakchigi
 
-Most of the motion-based games on the market require players to purchase extra devices such as motion controllers and sensors. However, they can actually enjoy motion games with just one webcam if motion sensor is replaced by pose estimation algorithm.</br>
+Most of the motion games on the market require players to purchase extra devices such as motion controllers and sensors. However, just one PC with a webcam is enough if the motion sensor is replaced by pose estimation algorithm.</br>
 
-We developed a webcam-based rhythm game in which players tag circles on the screen with their body parts.</br>
+We developed a webcam-based rhythm game in which players use their body parts to tag circles that show up on the screen.</br>
 
 We used https://github.com/ildoonet/tf-pose-estimation as our base architecture.
 
