@@ -6,6 +6,7 @@ from tf_pose.estimator import TfPoseEstimator
 from tf_pose.networks import get_graph_path
 import tf_pose.common as common
 import pygame
+from common import *
 
 score = 0
 score_img = cv2.imread('images/score.png')
@@ -137,8 +138,6 @@ def start_game(config, params):
         match_list = [] # sets to be checked for scoring; reset each frame
 
         start_time = time.time()
-        resume_time = 0.0
-        resume_start = 0.0
         play_music(params["song"], 0)
 
         while True: # game play
