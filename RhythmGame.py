@@ -8,6 +8,8 @@ import tf_pose.common as common
 import pygame
 
 score = 0
+score_img = cv2.imread('images/score.png')
+gameover_img = cv2.imread('images/gameover.png')
 
 def str2bool(v):
     return v.lower() in ("yes", "true", "t", "1")
@@ -95,8 +97,6 @@ def start_game(config, params):
     cam = cv2.VideoCapture(0)
     ret, named_window = cam.read()
 
-    score_img = cv2.imread('images/score.png')
-    gameover_img = cv2.imread('images/gameover.png')
 
     # hp(health point) attributes
     hp_x = config.imWidth//2 + 400
@@ -243,10 +243,10 @@ def clear_menu(params, score):
 # Game Over..
 def death_menu(params):
     play_sound(sound_disappointed)
-    image = cv2.imread('images/gameover.png')
+    config.named_window = gameover_img
     while True:
         a = cv2.waitKey(1)
-        cv2.imshow('McgBcg', image)
+        cv2.imshow('McgBcg', config.named_window)
         if a & 0xFF == ord('1'): # restart
             play_sound(sound_effect2)
             print('restart')

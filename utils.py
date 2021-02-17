@@ -21,11 +21,7 @@ sound_effect2 = 'musics/sound2.wav'
 sound_applause = 'musics/applause.wav'
 sound_disappointed = 'musics/disappointed.wav'
 
-
-## 키보드로 숫자 입력을 받아 게임의 난이도를 결정하는 메인메뉴
-## 각 모드별로 미리듣기(teaser) 기능을 제공한다
-## Decide the difficulty of the game by taking input through keybord
-## Provides a teaser function for each mode
+# player chooses song & difficulty
 def main_menu(config, params):
     diff = None
     exit = None
@@ -115,9 +111,13 @@ def main_menu(config, params):
     params["resume"] = False
     cv2.destroyAllWindows()
 
+def get_number(list):
+    ret_list = []
+    for i in range(len(list)):
+        ret_list.append(list[i][0:11])
+    return ret_list
 
-## 선택한 게임 모드에 알맞는 게임패턴을 로드한다
-## Load appropriate game pattern for the selected mode
+# load appropriate game pattern
 def load_pattern(config, params):
     pattern = None
 
@@ -141,8 +141,7 @@ def load_pattern(config, params):
     return
 
 
-## 선택한 게임 모드에 해당하는 음악을 로드한다
-## Load appropriate background music for the selected mode
+# load appropriate song
 def load_song(config, params):
     song = None
 
