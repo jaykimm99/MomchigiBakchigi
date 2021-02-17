@@ -128,11 +128,11 @@ def load_pattern(config, params):
     diff = params["diff"]
 
     if diff == 'easy':
-        df = pd.read_excel('sunset_glow.xlsx', sheet_name='sunset')
+        df = pd.read_excel('game_patterns.xlsx', sheet_name='sunset')
         data = pd.concat([df[0:39]]).values.tolist()
         pattern = get_number(data)
     elif diff == 'hard':
-        df = pd.read_excel('sunset_glow.xlsx', sheet_name='bingo')
+        df = pd.read_excel('game_patterns.xlsx', sheet_name='bingo')
         data = pd.concat([df[0:137]]).values.tolist()
         pattern = get_number(data)
 

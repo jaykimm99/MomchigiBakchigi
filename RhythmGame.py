@@ -88,12 +88,8 @@ def start_game(config, params):
 
         for i in params["patterns"]:
             list = []
-            if i[10]:
-                time1 = i[0] - 6.6
-                time2 = i[0]
-            else:
-                time1 = i[0] - 3
-                time2 = i[0] + 1
+            time1 = i[0] - 3
+            time2 = i[0] + 1
             list.extend([i[0], time1, time2, False, i[10]])
 
             for j in range(1, 10): # j = 1 ~ 9
