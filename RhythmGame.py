@@ -8,22 +8,11 @@ import tf_pose.common as common
 import pygame
 from common import *
 
-score = 0
 score_img = cv2.imread('images/score.png')
 gameover_img = cv2.imread('images/gameover.png')
 
 def str2bool(v):
     return v.lower() in ("yes", "true", "t", "1")
-
-def shownum(named_window, target_time, play_time, image):
-    if target_time - 3 <= play_time <= target_time :
-        cv2.imshow('McgBcg', cv2.imread(image))
-    elif play_time > target_time - 3.5:
-        cv2.putText(named_window, '1', (config.imWidth - 555, config.imHeight - 160), cv2.FONT_HERSHEY_TRIPLEX, 4, (0, 0, 255), 7, cv2.LINE_8) # 1일 때 빨간색
-    elif play_time > target_time - 4.5:
-        cv2.putText(named_window, '2', (config.imWidth - 555, config.imHeight - 160), cv2.FONT_HERSHEY_TRIPLEX, 4, (255, 255, 255), 7, cv2.LINE_8)
-    elif play_time > target_time - 6.5:
-        cv2.putText(named_window, '3', (config.imWidth - 555, config.imHeight - 160), cv2.FONT_HERSHEY_TRIPLEX, 4, (255, 255, 255), 7, cv2.LINE_8)
 
 def show_hp(bgImg, hp_img, x_offset, y_offset, x_resize, y_resize):
     hp_img = cv2.resize(hp_img, (x_resize, y_resize))
@@ -40,7 +29,7 @@ def show_hp(bgImg, hp_img, x_offset, y_offset, x_resize, y_resize):
     bgImg[y_offset: y_offset + rows, x_offset:x_offset + cols] = dst
 
 # called every frame; checks if the player scored
-def match(config, match_list, centers, hp, play_time):
+def match(config, match_list, centers, hp, play_time, score):
     BodyColors = [[255, 0, 0],
                   [0, 0, 0],
                   [0, 0, 0],
@@ -83,7 +72,6 @@ def match(config, match_list, centers, hp, play_time):
                            60 - int(40 * circle_ratio), color, thickness=2)
 
             if int(config.activation_areas[j[0]][0][0]) < centers[j[1]][0] < int(config.activation_areas[j[0]][1][0]) and int(config.activation_areas[j[0]][0][1]) < centers[j[1]][1] < int(config.activation_areas[j[0]][1][1]):
-                global score
                 score += 5
                 if hp < 10:
                     hp += 2
@@ -111,7 +99,6 @@ def start_game(config, params):
     h = 368
     e = TfPoseEstimator(get_graph_path('mobilenet_thin'), target_size=(w, h), trt_bool=str2bool("False"))
 
-    global score
     while True:
         params["restart"] = False
         hp = 10
@@ -170,7 +157,7 @@ def start_game(config, params):
                 if cur_order > len(game_patterns) - 1:
                     cur_order = len(game_patterns) - 1
             if match_list:
-                match_list = match(config, match_list, centers, hp, play_time)
+                match_list = match(config, match_list, centers, hp, play_time, score)
             if match_list and match_list[0][2] < play_time: # and 아직 있으면
                 hp -= 1
                 del match_list[0]
