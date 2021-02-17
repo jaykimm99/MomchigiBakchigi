@@ -5,7 +5,6 @@ from statistics import median_high
 from tf_pose.estimator import TfPoseEstimator
 from tf_pose.networks import get_graph_path
 import tf_pose.common as common
-import pygame
 from common import *
 
 score_img = cv2.imread('images/score.png')
