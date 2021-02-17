@@ -1,7 +1,6 @@
 import cv2
 import time
 from utils import *
-from statistics import median_high
 from tf_pose.estimator import TfPoseEstimator
 from tf_pose.networks import get_graph_path
 import tf_pose.common as common

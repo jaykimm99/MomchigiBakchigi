@@ -3,8 +3,11 @@ dill
 fire
 matplotlib
 numba
+opencv-python
+pandas
 psutil
 pycocotools
+pygame
 requests
 scikit-image
 scipy
