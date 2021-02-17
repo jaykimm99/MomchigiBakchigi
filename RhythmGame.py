@@ -5,10 +5,6 @@ from statistics import median_high
 from tf_pose.estimator import TfPoseEstimator
 from tf_pose.networks import get_graph_path
 import tf_pose.common as common
-from common import *
-
-score_img = cv2.imread('images/score.png')
-gameover_img = cv2.imread('images/gameover.png')
 
 def str2bool(v):
     return v.lower() in ("yes", "true", "t", "1")
@@ -29,24 +25,8 @@ def show_hp(bgImg, hp_img, x_offset, y_offset, x_resize, y_resize):
 
 # called every frame; checks if the player scored
 def match(config, match_list, centers, hp, play_time, score):
-    BodyColors = [[255, 0, 0],
-                  [0, 0, 0],
-                  [0, 0, 0],
-                  [255, 102, 0],
-                  [255, 255, 0],
-                  [0, 0, 0],
-                  [255, 102, 0],
-                  [255, 255, 0],
-                  [0, 153, 0],
-                  [0, 0, 0],
-                  [0, 0, 255],
-                  [0, 153, 0],
-                  [0, 0, 0],
-                  [0, 0, 255],
-                  [0, 0, 0],
-                  [0, 0, 0],
-                  [0, 0, 0],
-                  [0, 0, 0]]
+    BodyColors = common.TestColor.CocoColors
+
     for i in match_list:
         if not i[4] == 0:
             pass
@@ -93,6 +73,7 @@ def start_game(config, params):
     hp_w = 50
     hp_h = 42
     hp_image = cv2.imread('images/heart.png')
+    score_img = cv2.imread('images/score.png')
 
     w = 432
     h = 368
@@ -228,6 +209,7 @@ def clear_menu(params, score):
 # Game Over..
 def death_menu(params):
     play_sound(sound_disappointed)
+    gameover_img = cv2.imread('images/gameover.png')
     config.named_window = gameover_img
     while True:
         a = cv2.waitKey(1)
