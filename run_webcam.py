@@ -19,7 +19,6 @@ if __name__ == '__main__':
     formatter = logging.Formatter('[%(asctime)s] [%(name)s] [%(levelname)s] %(message)s')
     ch.setFormatter(formatter)
     logger.addHandler(ch)
-    print(1)
 
     parser = argparse.ArgumentParser(description='tf-pose-estimation realtime webcam')
     parser.add_argument('--camera', type=int, default=0)
@@ -39,16 +38,24 @@ if __name__ == '__main__':
 
     # load pattern and song, start game
     while True:
-        main_menu(config, params)
+        try:
+            main_menu(config, params)
+        except:
+            print("Failed to load main_menu. 메인 메뉴 불러오기 실패")
+
         if params["exit"] is True:
             cv2.destroyAllWindows()
             break
-        print('load_pattern')
-        load_pattern(config, params)
-        print('load_song')
-        load_song(config, params)
-        print('start_game')
-        start_game(config, params)
+
+        try:
+            print('load_pattern')
+            load_pattern(config, params)
+            print('load_song')
+            load_song(config, params)
+            print('start_game')
+            start_game(config, params)
+        except:
+            print("Failed to load the game data. 게임 정보 불러오기 실패")
 
     cv2.waitKey(0)
     cv2.destroyAllWindows()

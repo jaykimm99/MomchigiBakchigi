@@ -7,14 +7,20 @@ import time
 config = GameConfig()
 
 def play_music(music_file, time=0.0):
-    mixer.init()
-    mixer.music.load(music_file)
-    mixer.music.play(1, time)
+    try:
+        mixer.init()
+        mixer.music.load(music_file)
+        mixer.music.play(1, time)
+    except:
+        print("Failed to play the music.")
 
 def play_sound(sound_file):
-    mixer.init()
-    sound = mixer.Sound(sound_file)
-    mixer.Sound.play(sound)
+    try:
+        mixer.init()
+        sound = mixer.Sound(sound_file)
+        mixer.Sound.play(sound)
+    except:
+        print("Failed to play the sound effect.")
 
 sound_effect1 = 'musics/sound1.wav'
 sound_effect2 = 'musics/sound2.wav'
