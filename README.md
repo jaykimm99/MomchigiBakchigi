@@ -6,7 +6,9 @@ We developed a webcam-based rhythm game in which players use their body to dance
 
 We used (Original Repo: https://github.com/ildoonet/tf-pose-estimation) as our base architecture.
 
-Demo: ![sample1.gif](./etcs/sample1.gif)
+Demo: </br>
+![sample1.gif](./etcs/sample1.gif)
+
 
 ## Install
 
